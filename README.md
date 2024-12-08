@@ -4,7 +4,7 @@
 
 ---
 
-<h2 align="center"><a href="https://github.com/ElBi21/doFireTick/blob/main/article/doFireTick%20Report.pdf">→ Read our report here! ←</a></h2>
+<h3 align="center"><a href="https://github.com/ElBi21/doFireTick/blob/main/article/doFireTick%20Report.pdf">→ Read our report here! ←</a></h3>
 
 --- 
 
