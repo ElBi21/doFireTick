@@ -65,7 +65,7 @@
 \maketitle
 
 \begin{abstract}
-    This article contains the report for the Deep Learning course challenge, which asked to the course participants to build a binary classifier which should recognize whether there is some fire in a picture. We here present a possible implementation of this classifier, which reached an astonishing accuracy of $98.78\%$
+    This article contains the report for the Deep Learning course challenge, which asked to the course participants to build a binary classifier which should recognize whether there is some fire in a picture. We here present a possible implementation of this classifier, which reached an astonishing accuracy of $\mathbf{98.78\%}$
 \end{abstract}
 
 \begin{keywords}
@@ -80,11 +80,86 @@ CNNs have been widely adopted in many uses as of today, either for accessibility
 \nl
 \indent This is ultimately the scope of this paper: to present a working model which can be employed for simple fire detection tasks. We will here explain the structure used, and the performance reached by the model.
 
-\section{Structure of the model}
+In order to perform the given task, we decided to use an ensemble of three models, and to train them with a dataset which has been previously augmented by manipulating all the images.
 
-\subsection{Dataloader and data augmentation}
+\section{Structure of the dataset}
 
-\subsection{Structure of the ensemble}
+\begin{figure}
+    \label{dataset_example}
+    \centering
+    \begin{tabular}{c c}
+        \includegraphics[width = 3.5cm]{imgs/no_fire.jpg} & \includegraphics[width = 3.5cm]{imgs/fire.jpg}
+        \\
+        \texttt{label: 0} & \texttt{label: 1}
+    \end{tabular}
+    \caption{Example of images belonging to the dataset with the corresponding label}
+\end{figure}
+
+For this task, we used a dataset composed of $10,926$ images; we later applied some steps of data augmentation so that we could achieve better results by making the model generalize enough.
+\nl
+The dataset is separated in two folders (for the two classes), where each folder represents the label of each image:
+\begin{itemize}
+    \item folder \verb|0| contains the images that do not contain fire;
+    \item folder \verb|1| contains the images that contain fire;
+\end{itemize}
+
+\subsection{Data augmentation}
+
+Data augmentation is a common step which is usually made to enhance the number of items in a dataset by using items already belonging to said dataset. We applied the following operations to our dataset:
+\begin{itemize}
+    \item \textbf{Random rotation}: to each image, a random rotation of $x$ degress could've been applied, where $x \in [0, 15]$. This ensures that the fire would be recognized even if it was not "parallel" with respect to the $y$ axis of the image;
+    \item \textbf{Color jitter}: a random color jitter was also applied to all the images. The parameters passed to the jitter function are listed on Table \ref{color_jittering_vals}. By applying a color jitter, we make sure that the model would recognize a fire also when light conditions were not optimal in the photo (for instance if the image is either too dark or too bright);
+    \item \textbf{Brightness noise}: for each image also some noise was added, and this was applied through a lambda function. For each image, some noise of equal size would be generated, and then through clamping the noise got applied to the image. This kind of noise allowed us to train the model to recognize a fire also in some harsh conditions, and helps avoiding overfitting.
+\end{itemize}
+
+\begin{table}
+    \caption{Parameters of the color jittering function}
+    \label{color_jittering_vals}
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \makecell{\textbf{Parameter}} & \textbf{Value}
+        \\ \hline\hline
+        \verb|brightness| & 0.2 \\ \hline
+        \verb|contrast| & 0.2 \\ \hline
+        \verb|saturation| & 0.2 \\ \hline
+        \verb|hue| & 0.1 \\ \hline
+    \end{tabular}
+\end{table}
+
+\section{Structure of the ensemble}
+
+\begin{table*}
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Structure of the ensemble}
+    \label{ensemble_specs}
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \makecell{\textbf{Model}} & \makecell{\textbf{Layer}} & \textbf{Dimensions} & \textbf{Loss} & \textbf{Optimizer} \\
+        \hline
+        \hline
+        \multirow{4}{*}{ResNet 152} & \multicolumn{2}{c|}{Backbone of the ResNet 152} & \multirow{4}{*}{Focal Loss} & \multirow{4}{*}{AdamW}
+        \\ \cline{2-3} 
+        & Linear & $(1024 \times 512)$ & &
+        \\
+        & Linear & $(512 \times 2)$ & &
+        \\
+        & ReLU & / & &
+        \\
+        \hline \hline
+        \multirow{1}{*}{ResNet 18} & \multicolumn{2}{c|}{Backbone of the ResNet 18} & \multirow{1}{*}{/} & \multirow{1}{*}{/}
+        \\
+        \hline\hline
+        \multirow{1}{*}{ResNet 50} & \multicolumn{2}{c|}{Backbone of the ResNet 50} & \multirow{1}{*}{/} & \multirow{1}{*}{/}
+        \\
+        \hline
+    \end{tabular}
+\end{table*}
+
+The ensemble is composed of three models, based on a ResNet 150, a ResNet 18 and a ResNet 50. The complete specifications of the three models can be found in Table \ref{ensemble_specs}. Some small modifications have been made to each model, in order to achieve different results. We here list all the modifications that have been made to each model, alongside an explanation of why they have been applied.
+
+\subsection*{Model 1 \texorpdfstring{\textbullet}{•} ResNet 150}
 
 % model ensemble: 
 % - resnet152
@@ -93,28 +168,7 @@ CNNs have been widely adopted in many uses as of today, either for accessibility
 
 \lipsum
 
-\begin{table*}
-    \centering
-    \begin{tabular}{|c c|c c c c c|}
-        \hline
-        \makecell{\textbf{Model}} & \makecell{\textbf{Layer}} & \textbf{Size} & \textbf{Stride} & \textbf{Padding} & \textbf{Input} & \textbf{Dimensions} \\
-        \hline
-        \hline
-        \multirow{4}{*}{ResNet 150} & \multicolumn{6}{|c|}{Backbone of the ResNet 150} \\
-        & Max3D Pool & $1 \times 2 \times 2$ & $(1, \; 2, \; 2)$ & / & $(8 \times 75 \times 50 \times 75)$ & $(C \times T \times H \times W)$ \\
-        & STCNN & $3 \times 5 \times 5$ & $(1, \; 1, \; 1)$ & $(1, \; 2, \; 2)$ & $(8 \times 75 \times 25 \times 37)$ & $(C \times T \times H \times W)$ \\
-        & Max3D Pool & $1 \times 2 \times 2$ & $(1, \; 2, \; 2)$ & / & $(16 \times 75 \times 25 \times 37)$ & $(C \times T \times H \times W)$ \\
-        \hline \hline
-        \multirow{2}{*}{ResNet 18} & STCNN & $3 \times 5 \times 5$ & $(1, \; 1, \; 1)$ & $(1, \; 2, \; 2)$ & $(16 \times 75 \times 12 \times 18)$ & $(C \times T \times H \times W)$ \\
-        & Max3D Pool & $1 \times 2 \times 2$ & $(1, \; 2, \; 2)$ & / & $(32 \times 75 \times 12 \times 18)$ & $(C \times T \times H \times W)$ \\
-        \hline\hline
-        \multirow{5}{*}{ResNet 50} & Bi-GRU & $256$ & / & / & $(75 \times 1728)$ & $(T \times (C \times H \times W))$ \\
-        & Bi-GRU & $256$ & / & / & $(75 \times 512)$ & $(T \times P)$ \\
-        & Linear & $37$ & / & / & $(75 \times 512)$ & $(T \times P)$ \\
-        & $\log$-Softmax & $37$ & / & / & $(75 \times 37)$ & $(T \times L)$ \\
-        \hline
-    \end{tabular}
-\end{table*}
+
 
 \section{Performance evaluation}
 
