@@ -65,7 +65,7 @@
 \maketitle
 
 \begin{abstract}
-    This article contains the report for the Deep Learning course challenge, which asked to the course participants to build a binary classifier which should recognize whether there is some fire in a picture. We here present a possible implementation of this classifier, which reached an astonishing accuracy of $98.5\%$
+    This article contains the report for the Deep Learning course challenge, which asked to the course participants to build a binary classifier which should recognize whether there is some fire in a picture. We here present a possible implementation of this classifier, which reached an astonishing accuracy of $98.78\%$
 \end{abstract}
 
 \begin{keywords}
@@ -82,7 +82,39 @@ CNNs have been widely adopted in many uses as of today, either for accessibility
 
 \section{Structure of the model}
 
+\subsection{Dataloader and data augmentation}
+
+\subsection{Structure of the ensemble}
+
+% model ensemble: 
+% - resnet152
+% - resnet18
+% - resnet50
+
 \lipsum
+
+\begin{table*}
+    \centering
+    \begin{tabular}{|c c|c c c c c|}
+        \hline
+        \makecell{\textbf{Model}} & \makecell{\textbf{Layer}} & \textbf{Size} & \textbf{Stride} & \textbf{Padding} & \textbf{Input} & \textbf{Dimensions} \\
+        \hline
+        \hline
+        \multirow{4}{*}{ResNet 150} & \multicolumn{6}{|c|}{Backbone of the ResNet 150} \\
+        & Max3D Pool & $1 \times 2 \times 2$ & $(1, \; 2, \; 2)$ & / & $(8 \times 75 \times 50 \times 75)$ & $(C \times T \times H \times W)$ \\
+        & STCNN & $3 \times 5 \times 5$ & $(1, \; 1, \; 1)$ & $(1, \; 2, \; 2)$ & $(8 \times 75 \times 25 \times 37)$ & $(C \times T \times H \times W)$ \\
+        & Max3D Pool & $1 \times 2 \times 2$ & $(1, \; 2, \; 2)$ & / & $(16 \times 75 \times 25 \times 37)$ & $(C \times T \times H \times W)$ \\
+        \hline \hline
+        \multirow{2}{*}{ResNet 18} & STCNN & $3 \times 5 \times 5$ & $(1, \; 1, \; 1)$ & $(1, \; 2, \; 2)$ & $(16 \times 75 \times 12 \times 18)$ & $(C \times T \times H \times W)$ \\
+        & Max3D Pool & $1 \times 2 \times 2$ & $(1, \; 2, \; 2)$ & / & $(32 \times 75 \times 12 \times 18)$ & $(C \times T \times H \times W)$ \\
+        \hline\hline
+        \multirow{5}{*}{ResNet 50} & Bi-GRU & $256$ & / & / & $(75 \times 1728)$ & $(T \times (C \times H \times W))$ \\
+        & Bi-GRU & $256$ & / & / & $(75 \times 512)$ & $(T \times P)$ \\
+        & Linear & $37$ & / & / & $(75 \times 512)$ & $(T \times P)$ \\
+        & $\log$-Softmax & $37$ & / & / & $(75 \times 37)$ & $(T \times L)$ \\
+        \hline
+    \end{tabular}
+\end{table*}
 
 \section{Performance evaluation}
 
