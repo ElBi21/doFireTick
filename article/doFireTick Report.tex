@@ -1,0 +1,91 @@
+\documentclass[11pt, journal]{IEEEtran}
+\usepackage{lipsum}
+\usepackage[T1]{fontenc}
+\usepackage{fouriernc}
+\usepackage{cases}
+\usepackage{amsmath}
+\usepackage[noadjust]{cite}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{makecell}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{lipsum}
+\usepackage{listings}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    anchorcolor=blue,
+    urlcolor=blue,
+    citecolor=blue
+}
+
+\newcommand{\eq}{\; = \;}
+%\newcommand{\text}[1]{\mbox{\footnotesize #1}}
+\newcommand{\nl}{
+
+\medskip
+
+}
+\newcommand{\centered}[2]{\begin{tabular}{#1} #2 \end{tabular}}
+
+\lstdefinestyle{standstyle}{
+    %backgroundcolor=\color{backcolour!05},
+    basicstyle=\ttfamily\linespread{1}\scriptsize\color{black!80},
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=none,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+}
+
+\lstset{style=standstyle}
+
+\newcommand{\nl}{
+
+\medskip
+
+}
+
+\DeclareMathAlphabet{\mathcal}{OMS}{zplm}{m}{n}
+
+\title{\texttt{/gamerule doFireTick true}\\A binary classifier for recognizing fire}
+\author{Leonardo Biason (\textit{2045751}) \quad Lorenzo Marinelli (\textit{2043092}) \quad Oscar Michele Norelli (\textit{2046721})}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+    This article contains the report for the Deep Learning course challenge, which asked to the course participants to build a binary classifier which should recognize whether there is some fire in a picture. We here present a possible implementation of this classifier, which reached an astonishing accuracy of $98.5\%$
+\end{abstract}
+
+\begin{keywords}
+    Sapienza, AcsAi, CNN, ResNet, Deep Learning, Computer Vision 
+\end{keywords}
+
+\section{Introduction}
+
+CNNs have been widely adopted in many uses as of today, either for accessibility features or as useful detection tools. Many examples of medical emplyments exist, and that's only one of the many possible use cases. However, this kind of technology can also be useful when detecting dangers and perils, and for automating checking routines. We may consider CNNs as a type of sensor, which reacts to certain visual events. With this paper, we present a possible use case for CNNs, in particular, one tied to fire prevention.
+\nl
+\indent Fire prevention is usually ensured thanks to smoke sensors, which cover small areas and allow for a granular control of reduced ambients. However, this is only possible when the ambient is a closed one, and it's hard to apply this kind of techniques on open spaces. That is where CNNs may well fit: by using a visual sensor on open areas, it becomes easier to control larger areas for fire hazards, and to alert any competent autority when a fire breaks.
+\nl
+\indent This is ultimately the scope of this paper: to present a working model which can be employed for simple fire detection tasks. We will here explain the structure used, and the performance reached by the model.
+
+\section{Structure of the model}
+
+\lipsum
+
+\section{Performance evaluation}
+
+\lipsum
+
+\end{document}
