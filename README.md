@@ -10,4 +10,4 @@
 
 This project has been done for the Deep Learning course challenge, which asked to the course participants to build a binary classifier which should recognize whether there is some fire in a picture. We here present a possible implementation of this classifier, which reached an astonishing accuracy of $98.5\%$.
 
-The code can be found in the [Jupyter notebook](https://github.com/ElBi21/doFireTick/blob/main/doFireTick.ipynb), while a more complete paper can be found [here](https://github.com/ElBi21/doFireTick/blob/main/article/doFireTick%20Report.pdf).
+The code can be found in the [Jupyter notebook](https://github.com/ElBi21/doFireTick/blob/main/doFireTick.ipynb), while a more complete paper can be found [here](https://github.com/ElBi21/doFireTick/blob/main/doFireTick.pdf).
