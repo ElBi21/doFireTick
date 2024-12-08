@@ -79,7 +79,7 @@ CNNs have been widely adopted in many uses as of today, either for accessibility
 \indent Fire prevention is usually ensured thanks to smoke sensors, which cover small areas and allow for a granular control of reduced ambients. However, this is only possible when the ambient is a closed one, and it's hard to apply this kind of techniques on open spaces. That is where CNNs may well fit: by using a visual sensor on open areas, it becomes easier to control larger areas for fire hazards, and to alert any competent autority when a fire breaks.
 \nl
 \indent This is ultimately the scope of this paper: to present a working model which can be employed for simple fire detection tasks. We will here explain the structure used, and the performance reached by the model.
-
+\nl
 In order to perform the given task, we decided to use an ensemble of three models, and to train them with a dataset which has been previously augmented by manipulating all the images.
 
 \section{Structure of the dataset}
@@ -111,6 +111,8 @@ Data augmentation is a common step which is usually made to enhance the number o
     \item \textbf{Color jitter}: a random color jitter was also applied to all the images. The parameters passed to the jitter function are listed on Table \ref{color_jittering_vals}. By applying a color jitter, we make sure that the model would recognize a fire also when light conditions were not optimal in the photo (for instance if the image is either too dark or too bright);
     \item \textbf{Brightness noise}: for each image also some noise was added, and this was applied through a lambda function. For each image, some noise of equal size would be generated, and then through clamping the noise got applied to the image. This kind of noise allowed us to train the model to recognize a fire also in some harsh conditions, and helps avoiding overfitting.
 \end{itemize}
+\nl
+After augmenting the whole dataset, the amount of samples went from $10,926$ to $21,852$, doubling the size of the dataset and allowing the models to train and reach more efficient results.
 
 \begin{table}
     \caption{Parameters of the color jittering function}
